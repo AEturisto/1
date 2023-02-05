@@ -25,11 +25,18 @@
             {
                 userInput = ReverseString( userInput ) + userInput;
             }
-            Console.WriteLine( userInput + "\n\nКоличество повторяющихся символов: ");
+
+            Console.Write( userInput + "\nПодстрока с началом и концом из <aeiouy>: ");
+
+            var ( start, end ) = FindStartAndEndStr( userInput );
+            Console.Write( userInput.Substring( start, end - start + 1 ));
+
+            Console.WriteLine( "\nКоличество повторяющихся символов: " );
+
             var repeatingChars = CountRepeatingChars( userInput );
             foreach (var character in repeatingChars)
             {
-                Console.WriteLine($"{character.Key}: {character.Value}");
+                Console.WriteLine( $"{character.Key}: {character.Value}" );
             }
 
         }
@@ -56,6 +63,21 @@
                 }
             }
             return restrictedChars;
+
+        }
+
+        static ( int,int ) FindStartAndEndStr(string str)
+        {
+            char[] vowelsChars = "aeiouy".ToCharArray();
+            List<int> vowelsCharsInStr = new List<int>();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (vowelsChars.Contains(str[i]))
+                {
+                    vowelsCharsInStr.Add(i);
+                }
+            }
+            return (vowelsCharsInStr[0], vowelsCharsInStr[vowelsCharsInStr.Count - 1]);
 
         }
 
