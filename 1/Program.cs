@@ -5,8 +5,7 @@
         static void Main(string[] args)
         {
             string userInput = Console.ReadLine();
-            List<char> restrictedChars = checkSymbols(userInput);
-
+            var restrictedChars = CheckSymbols(userInput);
             if (restrictedChars.Count > 0 )
             {
                 Console.Write("Forbidden characters: ");
@@ -26,7 +25,13 @@
             {
                 userInput = ReverseString( userInput ) + userInput;
             }
-            Console.WriteLine( userInput );
+            Console.WriteLine( userInput + "\n\nКоличество повторяющихся символов: ");
+            var repeatingChars = CountRepeatingChars( userInput );
+            foreach (var character in repeatingChars)
+            {
+                Console.WriteLine($"{character.Key}: {character.Value}");
+            }
+
         }
 
         static string ReverseString(string str)
@@ -39,7 +44,7 @@
             return newstr;
         }
 
-        static List<char> checkSymbols(string str)
+        static List<char> CheckSymbols(string str)
         {
             char[] allowedChars = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
             List<char> restrictedChars = new List<char>();
@@ -52,6 +57,23 @@
             }
             return restrictedChars;
 
+        }
+
+        static Dictionary<char, int> CountRepeatingChars(string str)
+        {
+            Dictionary<char, int> repeatingChars = new Dictionary<char, int>();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (repeatingChars.ContainsKey(str[i]))
+                {
+                    repeatingChars[str[i]] += 1;
+                }
+                else
+                {
+                    repeatingChars[str[i]] = 1;
+                }
+            }
+            return repeatingChars;
         }
     }
 }
