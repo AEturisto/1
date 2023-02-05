@@ -4,7 +4,27 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            string userInput = Console.ReadLine();
+            int userInputCenter = userInput.Length / 2;
+            if ( userInput.Length % 2 == 0) {
+                string substring1 = userInput.Substring( 0, userInputCenter );
+                string substring2 = userInput.Substring( userInputCenter, userInputCenter );
+                userInput = ReverseString( substring1 ) + ReverseString( substring2 );
+            } else
+            {
+                userInput = ReverseString( userInput ) + userInput;
+            }
+            Console.WriteLine( userInput );
+        }
+
+        static string ReverseString(string str)
+        {
+            string newstr = "";
+            for (int i = 1; i <= str.Length; i++)
+            {
+                newstr += str[str.Length - i];
+            }
+            return newstr;
         }
     }
 }
