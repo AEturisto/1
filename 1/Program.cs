@@ -1,11 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace _1
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        static readonly HttpClient client = new HttpClient();
+
+        public static async Task Main(string[] args)
         {
             string userInput = Console.ReadLine();
             var restrictedChars = CheckSymbols(userInput);
@@ -16,10 +24,6 @@ namespace _1
                 {
                     Console.Write(restrictedChars[i] + " ");
                 }
-                return;
-            }
-            if (userInput.Length == 0)
-            {
                 return;
             }
             int userInputCenter = userInput.Length / 2;
@@ -46,26 +50,33 @@ namespace _1
             {
                 Console.WriteLine($"{character.Key}: {character.Value}");
             }
-            Console.WriteLine("Выберите метод сортировки QuickSort/TreeSort [q/t]: ");
-            string userChoose = Console.ReadLine().ToLower();
-            if (userChoose == "q")
+
+            if (userInput.Length != 0)
             {
-                Console.WriteLine(QuickSort(userInput));
-            }
-            else if (userChoose == "t")
-            {
-                Console.WriteLine(TreeSort(userInput));
-            }
-            else
-            {
-                Console.WriteLine("Сортировка не выбрана. ");
+                Console.WriteLine("Выберите метод сортировки QuickSort/TreeSort [q/t]: ");
+                string userChoose = Console.ReadLine().ToLower();
+                if (userChoose == "q")
+                {
+                    Console.WriteLine(QuickSort(userInput));
+                }
+                else if (userChoose == "t")
+                {
+                    Console.WriteLine(TreeSort(userInput));
+                }
+                else
+                {
+                    Console.WriteLine("Сортировка не выбрана. ");
+                }
+
+
+                await WriteStrWithoutOneSymbol(userInput);
             }
         }
 
         public static string ReverseString(string str)
         {
             string newstr = "";
-            for ( int i = 1; i <= str.Length; i++ )
+            for (int i = 1; i <= str.Length; i++)
             {
                 newstr += str[str.Length - i];
             }
@@ -93,7 +104,7 @@ namespace _1
             List<char> vowelsCharsList = new List<char>(vowelsChars);
             if (!vowelsCharsList.Any(str.Contains))
             {
-                return (0,-1);
+                return (0, -1);
             }
             List<int> vowelsCharsInStr = new List<int>();
             for (int i = 0; i < str.Length; i++)
@@ -123,6 +134,26 @@ namespace _1
             }
             return repeatingChars;
         }
+
+        public async static Task WriteStrWithoutOneSymbol(string str)
+        {
+            int randNumber;
+            try
+            {
+                client.DefaultRequestHeaders.Add("User-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0");
+                HttpResponseMessage response = await client.GetAsync("https://www.random.org/integers/?num=1&min=0&max="+(str.Length-1)+"&col=1&base=10&format=plain&rnd=new");
+                randNumber = Int32.Parse(await response.Content.ReadAsStringAsync());
+            } 
+            catch(HttpRequestException e)
+            {
+                Random rand = new Random();
+                randNumber = rand.Next(0, str.Length - 1);
+            }
+            List<char> characters = new List<char>(str.ToCharArray());
+            characters.RemoveAt(randNumber);
+            Console.WriteLine(string.Concat(characters));
+        }
+
         public static string QuickSort(string str)
         {
             char[] characters = str.ToCharArray();
