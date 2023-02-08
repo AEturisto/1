@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace _1
 {
-    internal class Program
+    public class Program
     {
         static readonly HttpClient client = new HttpClient();
 
